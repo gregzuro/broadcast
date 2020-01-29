@@ -1,11 +1,11 @@
-#Broadcast
+# Broadcast
 
-##Overview
+## Overview
 
 - clients websocket-connect to `/register` in order to receive all messages
 - anyone may broadcast a message to all of the clients using the `/broadcast` endpoint
 
-##Details
+## Details
 
 Clients register by establishing a websocket connection.
 
@@ -14,9 +14,9 @@ The `sender` goroutine reads that channel and sends the message to each of the c
 
 Clients are stored in a map using the sendChannel for that client's `register` handler as the key.
 
-##Testing
+## Testing
 
-###Manual
+### Manual
 
 Start the server:
 
@@ -32,7 +32,7 @@ $ curl -v -X PUT http://localhost:8081/broadcast?message=my-message
 
 
 
-###Automated
+### Automated
 
 ```console
 $ go test ./...
