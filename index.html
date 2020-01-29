@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Go Takehome client</title>
+</head>
+<body>
+
+<script>
+    let socket = new WebSocket("ws://localhost:8081/register");
+    console.log("Attempting Connection...");
+
+    socket.onopen = () => {
+        console.log("[connected]");
+    };
+
+    socket.onmessage = function (event) {
+        console.log("websocket message:", event)
+        document.write("[message:] " + event.data + "<br>")
+    }
+
+    socket.onclose = event => {
+        console.log("Socket Closed Connection: ", event);
+        document.write("[closed]<br>")
+    };
+
+    socket.onerror = error => {
+        console.log("Socket Error: ", error);
+    };
+
+</script>
+</body>
+</html>
+
