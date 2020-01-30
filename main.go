@@ -11,15 +11,15 @@ Broadcast server
 */
 
 import (
-	"sync"
 	"github.com/gorilla/websocket"
+	"sync"
 
 	"log"
 	"net/http"
 )
 
 // registeredClients is a map containing all the currently registeredClients clients (identified with its sendChannel)
-var registeredClientsMux sync.Mutex
+var registeredClientsMux sync.RWMutex
 var registeredClients map[chan string]struct{}
 
 // messageChannel is a channel that allows the http handler to send messages to all of the sender goroutines via `sender`
@@ -155,7 +155,7 @@ func broadcast(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// sender sends messages from messageChannel to all the registeredClients 
+// sender sends messages from messageChannel to all the registeredClients
 func sender() {
 
 	// create a buffered channel to receive messages that have been received from the `broadcast` endpoint
@@ -169,10 +169,12 @@ func sender() {
 		log.Print("sending to all registered clients: ", message)
 
 		// send message to all registered clients
+		registeredClientsMux.RLock()
 		for sendChannel := range registeredClients {
 			log.Print("sending to: ", sendChannel)
 			sendChannel <- message
 		}
+		registeredClientsMux.RUnlock()
 
 	}
 
